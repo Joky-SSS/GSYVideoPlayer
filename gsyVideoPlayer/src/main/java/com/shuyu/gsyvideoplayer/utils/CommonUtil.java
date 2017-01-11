@@ -9,11 +9,9 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import java.io.File;
@@ -177,8 +175,6 @@ public class CommonUtil {
         if (context == null) return null;
         if (context instanceof AppCompatActivity) {
             return (AppCompatActivity) context;
-        } else if (context instanceof ContextThemeWrapper) {
-            return getAppCompActivity(((ContextThemeWrapper) context).getBaseContext());
         }
         return null;
     }
