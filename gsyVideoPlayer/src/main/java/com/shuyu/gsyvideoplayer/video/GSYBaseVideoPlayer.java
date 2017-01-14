@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
+import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -46,8 +47,10 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
 
 public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMediaPlayerListener {
 
+    @IdRes
     public static final int SMALL_ID = 84778;
 
+    @IdRes
     protected static final int FULLSCREEN_ID = 85597;
 
     protected static long CLICK_QUIT_FULLSCREEN_TIME = 0;

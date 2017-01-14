@@ -154,11 +154,11 @@ public class CustomGSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     @Override
-    protected void setTextAndProgress(int secProgress) {
+    protected void setTextAndProgress() {
         if (mIsFromUser) {
             return;
         }
-        super.setTextAndProgress(secProgress);
+        super.setTextAndProgress();
     }
 
     @Override

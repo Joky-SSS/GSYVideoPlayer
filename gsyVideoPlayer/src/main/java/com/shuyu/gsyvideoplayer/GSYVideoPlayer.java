@@ -859,11 +859,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     @Override
     public void onBufferingUpdate(int percent) {
         if (mCurrentState != CURRENT_STATE_NORMAL && mCurrentState != CURRENT_STATE_PREPAREING) {
-            if (percent != 0) {
-                setTextAndProgress(percent);
-                mBuffterPoint = percent;
-                Debuger.printfLog("Net speed: " + getNetSpeedText() + " percent " + percent);
-            }
             //循环清除进度
             if (mLooping && mHadPlay && percent == 0 && mProgressBar.getProgress() >= (mProgressBar.getMax() - 1)) {
                 loopSetProgressAndTime();
@@ -983,14 +978,12 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     protected class ProgressTimerTask extends TimerTask {
         @Override
         public void run() {
-            if (mCurrentState == CURRENT_STATE_PLAYING || mCurrentState == CURRENT_STATE_PAUSE) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setTextAndProgress(0);
-                    }
-                });
-            }
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    setTextAndProgress();
+                }
+            });
         }
     }
 
@@ -999,13 +992,11 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     public int getCurrentPositionWhenPlaying() {
         int position = 0;
-        if (mCurrentState == CURRENT_STATE_PLAYING || mCurrentState == CURRENT_STATE_PAUSE) {
-            try {
-                position = (int) GSYVideoManager.instance().getMediaPlayer().getCurrentPosition();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-                return position;
-            }
+        try {
+            position = (int) GSYVideoManager.instance().getMediaPlayer().getCurrentPosition();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return position;
         }
         return position;
     }
@@ -1024,10 +1015,11 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         return duration;
     }
 
-    protected void setTextAndProgress(int secProgress) {
+    protected void setTextAndProgress() {
         int position = getCurrentPositionWhenPlaying();
         int duration = getDuration();
         int progress = position * 100 / (duration == 0 ? 1 : duration);
+        int secProgress = getBuffterPoint();
         setProgressAndTime(progress, secProgress, position, duration);
     }
 
