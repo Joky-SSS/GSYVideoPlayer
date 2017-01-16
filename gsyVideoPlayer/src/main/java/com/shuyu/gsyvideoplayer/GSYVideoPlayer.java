@@ -108,9 +108,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     protected long mSeekOnStart = -1; //从哪个开始播放
 
-    protected long mPauseTime; //保存暂停时的时间
-
-    protected long mCurrentPosition; //当前的播放位置
+    protected int mPauseState; //保存暂停时的状态
 
     protected boolean mTouchingProgressBar = false;
 
@@ -424,10 +422,9 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     @Override
     public void onVideoPause() {
+        mPauseState = mCurrentState;
         if (GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
             setStateAndUi(CURRENT_STATE_PAUSE);
-            mPauseTime = System.currentTimeMillis();
-            mCurrentPosition = GSYVideoManager.instance().getMediaPlayer().getCurrentPosition();
             if (GSYVideoManager.instance().getMediaPlayer() != null)
                 GSYVideoManager.instance().getMediaPlayer().pause();
         }
@@ -438,11 +435,9 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     @Override
     public void onVideoResume() {
-        mPauseTime = 0;
-        if (mCurrentState == CURRENT_STATE_PAUSE) {
-            if (mCurrentPosition > 0 && GSYVideoManager.instance().getMediaPlayer() != null) {
+        if (mPauseState == CURRENT_STATE_PLAYING && mCurrentState == CURRENT_STATE_PAUSE) {
+            if (GSYVideoManager.instance().getMediaPlayer() != null) {
                 setStateAndUi(CURRENT_STATE_PLAYING);
-                GSYVideoManager.instance().getMediaPlayer().seekTo(mCurrentPosition);
                 GSYVideoManager.instance().getMediaPlayer().start();
             }
         }
