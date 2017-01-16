@@ -254,7 +254,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         if (mHideKey) {
             showNavKey(mContext, mSystemUiVisibility);
         }
-        showSupportActionBar(mContext, mActionBar, mStatusBar);
+//        showSupportActionBar(mContext, mActionBar, mStatusBar);
     }
 
     /**
