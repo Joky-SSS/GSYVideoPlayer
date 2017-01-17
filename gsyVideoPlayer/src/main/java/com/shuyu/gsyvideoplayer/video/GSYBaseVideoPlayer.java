@@ -189,7 +189,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
     /**
      * 全屏
      */
-    private void resolveFullVideoShow(Context context, final GSYBaseVideoPlayer gsyVideoPlayer, final FrameLayout frameLayout) {
+    protected void resolveFullVideoShow(Context context, final GSYBaseVideoPlayer gsyVideoPlayer, final FrameLayout frameLayout) {
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
         lp.setMargins(0, 0, 0, 0);
         lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -231,7 +231,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
     /**
      * 恢复
      */
-    private void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
+    protected void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
 
         if (oldF != null && oldF.getParent() != null) {
             ViewGroup viewGroup = (ViewGroup) oldF.getParent();
