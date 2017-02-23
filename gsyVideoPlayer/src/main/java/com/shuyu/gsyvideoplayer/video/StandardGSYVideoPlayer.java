@@ -39,6 +39,7 @@ import moe.codeest.enviews.ENDownloadView;
 import moe.codeest.enviews.ENPlayView;
 
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
+import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
 
 
 /**

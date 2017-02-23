@@ -35,10 +35,6 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideSupportActionBar;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
 
-/**
- * Created by shuyu on 2016/11/17.
- */
-
 public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMediaPlayerListener {
 
     @IdRes
@@ -60,7 +56,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
     protected int mRotate = 0; //针对某些视频的旋转信息做了旋转处理
 
-    private int mSystemUiVisibility;
+    protected int mSystemUiVisibility;
 
     protected float mSpeed = 1;//播放速度，只支持6.0以上
 
@@ -194,6 +190,8 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             Debuger.printfError("onQuitFullscreen");
             mVideoAllCallBack.onQuitFullscreen(mUrl, mObjects);
         }
+
+        showNavKey(mContext, mSystemUiVisibility);
     }
 
     /**

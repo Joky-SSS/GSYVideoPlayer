@@ -36,17 +36,10 @@ public class OrientationUtils {
         this.currentScreenType = getScreenOrientation();
     }
 
-    // 切换横屏和竖屏
-    public void togglePortAndLand() {
-        if (currentScreenType == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-            currentScreenType = preferredLandScreenType;
-            activity.setRequestedOrientation(currentScreenType);
-            gsyVideoPlayer.getFullscreenButton().setImageResource(R.drawable.video_shrink);
-        } else {
-            currentScreenType = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            activity.setRequestedOrientation(currentScreenType);
-            gsyVideoPlayer.getFullscreenButton().setImageResource(R.drawable.video_enlarge);
-        }
+    public void backToLand() {
+        currentScreenType = preferredLandScreenType;
+        activity.setRequestedOrientation(currentScreenType);
+        gsyVideoPlayer.getFullscreenButton().setImageResource(R.drawable.video_shrink);
     }
 
     // 强制切换回竖屏
