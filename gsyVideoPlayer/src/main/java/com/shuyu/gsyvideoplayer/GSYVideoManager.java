@@ -3,7 +3,6 @@ package com.shuyu.gsyvideoplayer;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -27,7 +26,6 @@ import com.shuyu.gsyvideoplayer.utils.StorageUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +49,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
     private static GSYVideoManager videoManager;
 
     public static final int HANDLER_PREPARE = 0;
-    public static final int HANDLER_SETDISPLAY = 1;
+    public static final int HANDLER_SET_DISPLAY = 1;
     public static final int HANDLER_RELEASE = 2;
 
     private AbstractMediaPlayer mediaPlayer;
@@ -227,7 +225,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
                 case HANDLER_PREPARE:
                     initVideo(msg);
                     break;
-                case HANDLER_SETDISPLAY:
+                case HANDLER_SET_DISPLAY:
                     showDisplay(msg);
                     break;
                 case HANDLER_RELEASE:
@@ -355,7 +353,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     public void setDisplay(Surface holder) {
         Message msg = new Message();
-        msg.what = HANDLER_SETDISPLAY;
+        msg.what = HANDLER_SET_DISPLAY;
         msg.obj = holder;
         mMediaHandler.sendMessage(msg);
     }

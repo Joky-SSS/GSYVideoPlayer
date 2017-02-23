@@ -25,19 +25,15 @@ import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.transitionseverywhere.TransitionManager;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.shuyu.gsyvideoplayer.utils.CommonUtil.getActionBarHeight;
-import static com.shuyu.gsyvideoplayer.utils.CommonUtil.getStatusBarHeight;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideSupportActionBar;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
-import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
 
 /**
  * Created by shuyu on 2016/11/17.
@@ -58,13 +54,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
     protected boolean mCache = false;//是否播边边缓冲
 
-    private boolean mShowFullAnimation = true;//是否使用全屏动画效果
-
     protected boolean mNeedShowWifiTip = true; //是否需要显示流量提示
-
-    protected int[] mListItemRect;//当前item框的屏幕位置
-
-    protected int[] mListItemSize;//当前item的大小
 
     protected int mCurrentState = -1; //当前的播放状态
 
@@ -73,8 +63,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
     private int mSystemUiVisibility;
 
     protected float mSpeed = 1;//播放速度，只支持6.0以上
-
-    protected boolean mRotateViewAuto = true; //是否自动旋转
 
     protected boolean mIfCurrentIsFullscreen = false;//当前是否全屏
 
@@ -120,7 +108,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
     protected Bitmap mFullPauseBitmap = null;//暂停时的全屏图片；
 
-    protected OrientationUtils mOrientationUtils; //旋转工具类
+    protected OrientationUtils mOrientationUtils;
 
     private Handler mHandler = new Handler();
 
@@ -163,23 +151,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
     }
 
     /**
-     * 保存大小和状态
-     */
-    private void saveLocationStatus(Context context, boolean statusBar, boolean actionBar) {
-        getLocationOnScreen(mListItemRect);
-        int statusBarH = getStatusBarHeight(context);
-        int actionBerH = getActionBarHeight((Activity) context);
-        if (statusBar) {
-            mListItemRect[1] = mListItemRect[1] - statusBarH;
-        }
-        if (actionBar) {
-            mListItemRect[1] = mListItemRect[1] - actionBerH;
-        }
-        mListItemSize[0] = getWidth();
-        mListItemSize[1] = getHeight();
-    }
-
-    /**
      * 全屏
      */
     protected void resolveFullVideoShow(Context context, final GSYBaseVideoPlayer gsyVideoPlayer, final FrameLayout frameLayout) {
@@ -189,36 +160,16 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
         lp.gravity = Gravity.CENTER;
         gsyVideoPlayer.setLayoutParams(lp);
-        gsyVideoPlayer.setIfCurrentIsFullscreen(true);
+
         mOrientationUtils = new OrientationUtils((Activity) context, gsyVideoPlayer);
-        mOrientationUtils.setEnable(mRotateViewAuto);
-        gsyVideoPlayer.mOrientationUtils = mOrientationUtils;
 
-        if (isShowFullAnimation()) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mLockLand && mOrientationUtils.getIsLand() != 1) {
-                        mOrientationUtils.resolveByClick();
-                    }
-                    gsyVideoPlayer.setVisibility(VISIBLE);
-                    frameLayout.setVisibility(VISIBLE);
-                }
-            }, 300);
-        } else {
-            if (mLockLand) {
-                mOrientationUtils.resolveByClick();
-            }
-            gsyVideoPlayer.setVisibility(VISIBLE);
-            frameLayout.setVisibility(VISIBLE);
-        }
-
+        gsyVideoPlayer.setVisibility(VISIBLE);
+        frameLayout.setVisibility(VISIBLE);
 
         if (mVideoAllCallBack != null) {
             Debuger.printfError("onEnterFullscreen");
             mVideoAllCallBack.onEnterFullscreen(mUrl, mObjects);
         }
-        mIfCurrentIsFullscreen = true;
     }
 
     /**
@@ -243,11 +194,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             Debuger.printfError("onQuitFullscreen");
             mVideoAllCallBack.onQuitFullscreen(mUrl, mObjects);
         }
-        mIfCurrentIsFullscreen = false;
-        if (mHideKey) {
-            showNavKey(mContext, mSystemUiVisibility);
-        }
-//        showSupportActionBar(mContext, mActionBar, mStatusBar);
     }
 
     /**
@@ -271,10 +217,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
         this.mStatusBar = statusBar;
 
-        mListItemRect = new int[2];
-
-        mListItemSize = new int[2];
-
         final ViewGroup vp = getViewGroup();
 
         removeVideo(vp, FULLSCREEN_ID);
@@ -285,9 +227,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         if (mTextureViewContainer.getChildCount() > 0) {
             mTextureViewContainer.removeAllViews();
         }
-
-
-        saveLocationStatus(context, statusBar, actionBar);
 
         boolean hadNewConstructor = true;
 
@@ -310,7 +249,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             }
 
             gsyVideoPlayer.setId(FULLSCREEN_ID);
-            gsyVideoPlayer.setIfCurrentIsFullscreen(true);
             gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
             gsyVideoPlayer.setLooping(isLooping());
             gsyVideoPlayer.setSpeed(getSpeed());
@@ -318,26 +256,13 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             final FrameLayout frameLayout = new FrameLayout(context);
             frameLayout.setBackgroundColor(Color.BLACK);
 
-            if (mShowFullAnimation) {
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(getWidth(), getHeight());
-                lp.setMargins(mListItemRect[0], mListItemRect[1], 0, 0);
-                frameLayout.addView(gsyVideoPlayer, lp);
-                vp.addView(frameLayout, lpParent);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        TransitionManager.beginDelayedTransition(vp);
-                        resolveFullVideoShow(context, gsyVideoPlayer, frameLayout);
-                    }
-                }, 300);
-            } else {
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(getWidth(), getHeight());
-                frameLayout.addView(gsyVideoPlayer, lp);
-                vp.addView(frameLayout, lpParent);
-                gsyVideoPlayer.setVisibility(INVISIBLE);
-                frameLayout.setVisibility(INVISIBLE);
-                resolveFullVideoShow(context, gsyVideoPlayer, frameLayout);
-            }
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(getWidth(), getHeight());
+            frameLayout.addView(gsyVideoPlayer, lp);
+            vp.addView(frameLayout, lpParent);
+            gsyVideoPlayer.setVisibility(INVISIBLE);
+            frameLayout.setVisibility(INVISIBLE);
+            resolveFullVideoShow(context, gsyVideoPlayer, frameLayout);
+
             gsyVideoPlayer.mHadPlay = mHadPlay;
             gsyVideoPlayer.mCacheFile = mCacheFile;
             gsyVideoPlayer.mFullPauseBitmap = mFullPauseBitmap;
@@ -373,26 +298,17 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
 
     /**
+     * 只有全屏的播放器会调用这个函数
+     * 来自返回按钮和退出全屏按钮
      * 退出window层播放全屏效果
      */
     public void clearFullscreenLayout() {
-        mIfCurrentIsFullscreen = false;
-        int delay = 0;
         if (mOrientationUtils != null) {
-            delay = mOrientationUtils.backToProtVideo();
-            mOrientationUtils.setEnable(false);
-            if (mOrientationUtils != null) {
-                mOrientationUtils.releaseListener();
-                mOrientationUtils = null;
-            }
+            mOrientationUtils.backToPort();
+            mOrientationUtils = null;
         }
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                backToNormal();
-            }
-        }, delay);
 
+        backToNormal();
     }
 
     /**
@@ -408,27 +324,8 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             gsyVideoPlayer = (GSYVideoPlayer) oldF;
             //如果暂停了
             pauseFullBackCoverLogic(gsyVideoPlayer);
-            if (mShowFullAnimation) {
-                TransitionManager.beginDelayedTransition(vp);
 
-                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
-                lp.setMargins(mListItemRect[0], mListItemRect[1], 0, 0);
-                lp.width = mListItemSize[0];
-                lp.height = mListItemSize[1];
-                //注意配置回来，不然动画效果会不对
-                lp.gravity = Gravity.NO_GRAVITY;
-                gsyVideoPlayer.setLayoutParams(lp);
-
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
-                    }
-                }, 400);
-            } else {
-                resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
-            }
-
+            resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
         } else {
             resolveNormalVideoShow(null, vp, null);
         }
@@ -523,25 +420,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         return mIfCurrentIsFullscreen;
     }
 
-    public void setIfCurrentIsFullscreen(boolean ifCurrentIsFullscreen) {
-        this.mIfCurrentIsFullscreen = ifCurrentIsFullscreen;
-    }
-
-
-    public boolean isShowFullAnimation() {
-        return mShowFullAnimation;
-    }
-
-    /**
-     * 全屏动画
-     *
-     * @param showFullAnimation 是否使用全屏动画效果
-     */
-    public void setShowFullAnimation(boolean showFullAnimation) {
-        this.mShowFullAnimation = showFullAnimation;
-    }
-
-
     public boolean isLooping() {
         return mLooping;
     }
@@ -561,21 +439,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
      */
     public void setVideoAllCallBack(VideoAllCallBack mVideoAllCallBack) {
         this.mVideoAllCallBack = mVideoAllCallBack;
-    }
-
-
-    public boolean isRotateViewAuto() {
-        return mRotateViewAuto;
-    }
-
-    /**
-     * 是否开启自动旋转
-     */
-    public void setRotateViewAuto(boolean rotateViewAuto) {
-        this.mRotateViewAuto = rotateViewAuto;
-        if (mOrientationUtils != null) {
-            mOrientationUtils.setEnable(rotateViewAuto);
-        }
     }
 
     public boolean isLockLand() {
