@@ -49,7 +49,7 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
 public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
 
-    protected Timer DISSMISS_CONTROL_VIEW_TIMER;
+    protected Timer DISMISS_CONTROL_VIEW_TIMER;
 
     protected ProgressBar mBottomProgressBar;
 
@@ -226,7 +226,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             case CURRENT_STATE_NORMAL:
                 changeUiToNormal();
                 break;
-            case CURRENT_STATE_PREPAREING:
+            case CURRENT_STATE_PREPARING:
                 changeUiToPrepareingShow();
                 startDismissControlViewTimer();
                 break;
@@ -368,7 +368,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             mLockScreen.setVisibility(VISIBLE);
             return;
         }
-        if (mCurrentState == CURRENT_STATE_PREPAREING) {
+        if (mCurrentState == CURRENT_STATE_PREPARING) {
             if (mBottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToPrepareingClear();
             } else {
@@ -799,16 +799,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     }
 
 
-    @Override
-    public GSYBaseVideoPlayer showSmallVideo(Point size, boolean actionBar, boolean statusBar) {
-        GSYBaseVideoPlayer gsyBaseVideoPlayer = super.showSmallVideo(size, actionBar, statusBar);
-        if (gsyBaseVideoPlayer != null) {
-            StandardGSYVideoPlayer gsyVideoPlayer = (StandardGSYVideoPlayer) gsyBaseVideoPlayer;
-            gsyVideoPlayer.setStandardVideoAllCallBack(mStandardVideoAllCallBack);
-        }
-        return gsyBaseVideoPlayer;
-    }
-
     /**
      * 初始化为正常状态
      */
@@ -845,14 +835,14 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     private void startDismissControlViewTimer() {
         cancelDismissControlViewTimer();
-        DISSMISS_CONTROL_VIEW_TIMER = new Timer();
+        DISMISS_CONTROL_VIEW_TIMER = new Timer();
         mDismissControlViewTimerTask = new DismissControlViewTimerTask();
-        DISSMISS_CONTROL_VIEW_TIMER.schedule(mDismissControlViewTimerTask, 2500);
+        DISMISS_CONTROL_VIEW_TIMER.schedule(mDismissControlViewTimerTask, 2500);
     }
 
     private void cancelDismissControlViewTimer() {
-        if (DISSMISS_CONTROL_VIEW_TIMER != null) {
-            DISSMISS_CONTROL_VIEW_TIMER.cancel();
+        if (DISMISS_CONTROL_VIEW_TIMER != null) {
+            DISMISS_CONTROL_VIEW_TIMER.cancel();
         }
         if (mDismissControlViewTimerTask != null) {
             mDismissControlViewTimerTask.cancel();

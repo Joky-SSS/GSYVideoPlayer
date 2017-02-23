@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.util.AttributeSet;
@@ -21,7 +20,6 @@ import com.shuyu.gsyvideoplayer.GSYTextureView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.R;
-import com.shuyu.gsyvideoplayer.SmallVideoTouch;
 import com.shuyu.gsyvideoplayer.listener.GSYMediaPlayerListener;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
@@ -48,16 +46,13 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
 public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMediaPlayerListener {
 
     @IdRes
-    public static final int SMALL_ID = 84778;
-
-    @IdRes
     protected static final int FULLSCREEN_ID = 85597;
 
     protected static long CLICK_QUIT_FULLSCREEN_TIME = 0;
 
-    protected boolean mActionBar = false;//是否需要在利用window实现全屏幕的时候隐藏actionbar
+    protected boolean mActionBar = false;//是否需要在利用window实现全屏幕的时候隐藏Action Bar
 
-    protected boolean mStatusBar = false;//是否需要在利用window实现全屏幕的时候隐藏statusbar
+    protected boolean mStatusBar = false;//是否需要在利用window实现全屏幕的时候隐藏Status Bar
 
     protected boolean mHideKey = true;//是否隐藏虚拟按键
 
@@ -102,8 +97,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
     protected File mCachePath;
 
     protected ViewGroup mTextureViewContainer; //渲染控件父类
-
-    protected View mSmallClose; //小窗口关闭按键
 
     protected VideoAllCallBack mVideoAllCallBack;
 
@@ -479,93 +472,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         }
     }
 
-
-    /**
-     * 显示小窗口
-     */
-    public GSYBaseVideoPlayer showSmallVideo(Point size, final boolean actionBar, final boolean statusBar) {
-
-        final ViewGroup vp = getViewGroup();
-
-        removeVideo(vp, SMALL_ID);
-
-        if (mTextureViewContainer.getChildCount() > 0) {
-            mTextureViewContainer.removeAllViews();
-        }
-
-        try {
-            Constructor<GSYBaseVideoPlayer> constructor = (Constructor<GSYBaseVideoPlayer>) GSYBaseVideoPlayer.this.getClass().getConstructor(Context.class);
-            GSYBaseVideoPlayer gsyVideoPlayer = constructor.newInstance(getContext());
-            gsyVideoPlayer.setId(SMALL_ID);
-
-            FrameLayout.LayoutParams lpParent = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            FrameLayout frameLayout = new FrameLayout(mContext);
-
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(size.x, size.y);
-            int marginLeft = CommonUtil.getScreenWidth(mContext) - size.x;
-            int marginTop = CommonUtil.getScreenHeight(mContext) - size.y;
-
-            if (actionBar) {
-                marginTop = marginTop - getActionBarHeight((Activity) mContext);
-            }
-
-            if (statusBar) {
-                marginTop = marginTop - getStatusBarHeight(mContext);
-            }
-
-            lp.setMargins(marginLeft, marginTop, 0, 0);
-            frameLayout.addView(gsyVideoPlayer, lp);
-
-            vp.addView(frameLayout, lpParent);
-            gsyVideoPlayer.mHadPlay = mHadPlay;
-            gsyVideoPlayer.setUp(mOriginUrl, mCache, mCachePath, mMapHeadData, mObjects);
-            gsyVideoPlayer.setStateAndUi(mCurrentState);
-            gsyVideoPlayer.addTextureView();
-            //隐藏掉所有的弹出状态哟
-            gsyVideoPlayer.onClickUiToggle();
-            gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
-            gsyVideoPlayer.setLooping(isLooping());
-            gsyVideoPlayer.setSpeed(getSpeed());
-            gsyVideoPlayer.setSmallVideoTextureView(new SmallVideoTouch(gsyVideoPlayer, marginLeft, marginTop));
-
-            GSYVideoManager.instance().setLastListener(this);
-            GSYVideoManager.instance().setListener(gsyVideoPlayer);
-
-            if (mVideoAllCallBack != null) {
-                Debuger.printfError("onEnterSmallWidget");
-                mVideoAllCallBack.onEnterSmallWidget(mUrl, mObjects);
-            }
-
-            return gsyVideoPlayer;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * 隐藏小窗口
-     */
-    public void hideSmallVideo() {
-        final ViewGroup vp = getViewGroup();
-        GSYVideoPlayer gsyVideoPlayer = (GSYVideoPlayer) vp.findViewById(SMALL_ID);
-        removeVideo(vp, SMALL_ID);
-        mCurrentState = GSYVideoManager.instance().getLastState();
-        if (gsyVideoPlayer != null) {
-            mCurrentState = gsyVideoPlayer.getCurrentState();
-        }
-        GSYVideoManager.instance().setListener(GSYVideoManager.instance().lastListener());
-        GSYVideoManager.instance().setLastListener(null);
-        setStateAndUi(mCurrentState);
-        addTextureView();
-        CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
-        if (mVideoAllCallBack != null) {
-            Debuger.printfLog("onQuitSmallWidget");
-            mVideoAllCallBack.onQuitSmallWidget(mUrl, mObjects);
-        }
-    }
-
-
     /**
      * 设置播放URL
      *
@@ -599,12 +505,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
      * 添加播放的view
      */
     protected abstract void addTextureView();
-
-    /**
-     * 小窗口
-     **/
-    protected abstract void setSmallVideoTextureView(View.OnTouchListener onTouchListener);
-
 
     protected abstract void onClickUiToggle();
 

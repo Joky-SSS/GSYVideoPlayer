@@ -51,7 +51,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
 
     public static final int CURRENT_STATE_NORMAL = 0; //正常
-    public static final int CURRENT_STATE_PREPAREING = 1; //准备中
+    public static final int CURRENT_STATE_PREPARING = 1; //准备中
     public static final int CURRENT_STATE_PLAYING = 2; //播放中
     public static final int CURRENT_STATE_PLAYING_BUFFERING_START = 3; //开始缓冲
     public static final int CURRENT_STATE_PAUSE = 5; //暂停
@@ -100,7 +100,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     protected int mSeekToInAdvance = -1; //// TODO: 2016/11/13 跳过广告
 
-    protected int mBuffterPoint;//缓存进度
+    protected int mBufferPoint;//缓存进度
 
     protected int mSeekTimePosition; //手动改变滑动的位置
 
@@ -156,7 +156,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         this.mContext = context;
         View.inflate(context, getLayoutId(), this);
         mStartButton = findViewById(R.id.start);
-        mSmallClose = findViewById(R.id.small_close);
         mBackButton = (ImageView) findViewById(R.id.back);
         mCoverImageView = (ImageView) findViewById(R.id.cover);
         mFullscreenButton = (ImageView) findViewById(R.id.fullscreen);
@@ -193,7 +192,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      * @return
      */
     public boolean setUp(String url, boolean cacheWithPlay, Object... objects) {
-        return setUp(url, cacheWithPlay, ((File) null), objects);
+        return setUp(url, cacheWithPlay, null, objects);
     }
 
 
@@ -265,13 +264,13 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     cancelProgressTimer();
                     GSYVideoManager.instance().releaseMediaPlayer();
                     releasePauseCoverAndBitmap();
-                    mBuffterPoint = 0;
+                    mBufferPoint = 0;
                 }
                 if (mAudioManager != null) {
                     mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
                 }
                 break;
-            case CURRENT_STATE_PREPAREING:
+            case CURRENT_STATE_PREPARING:
                 resetProgressAndTime();
                 break;
             case CURRENT_STATE_PLAYING:
@@ -378,7 +377,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         ((Activity) getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         GSYVideoManager.instance().prepare(mUrl, mMapHeadData, mLooping, mSpeed);
-        setStateAndUi(CURRENT_STATE_PREPAREING);
+        setStateAndUi(CURRENT_STATE_PREPARING);
     }
 
     /**
@@ -458,25 +457,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         mTextureViewContainer.addView(mTextureView, layoutParams);
-    }
-
-    /**
-     * 小窗口
-     **/
-    @Override
-    protected void setSmallVideoTextureView(View.OnTouchListener onTouchListener) {
-        mTextureView.setOnTouchListener(onTouchListener);
-        mProgressBar.setOnTouchListener(null);
-        mFullscreenButton.setOnTouchListener(null);
-        mTextureView.setOnClickListener(null);
-        mSmallClose.setVisibility(VISIBLE);
-        mSmallClose.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideSmallVideo();
-                releaseAllVideos();
-            }
-        });
     }
 
     /**
@@ -775,7 +755,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     @Override
     public void onPrepared() {
-        if (mCurrentState != CURRENT_STATE_PREPAREING) return;
+        if (mCurrentState != CURRENT_STATE_PREPARING) return;
 
         if (GSYVideoManager.instance().getMediaPlayer() != null) {
             GSYVideoManager.instance().getMediaPlayer().start();
@@ -853,7 +833,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     @Override
     public void onBufferingUpdate(int percent) {
-        if (mCurrentState != CURRENT_STATE_NORMAL && mCurrentState != CURRENT_STATE_PREPAREING) {
+        if (mCurrentState != CURRENT_STATE_NORMAL && mCurrentState != CURRENT_STATE_PREPARING) {
             //循环清除进度
             if (mLooping && mHadPlay && percent == 0 && mProgressBar.getProgress() >= (mProgressBar.getMax() - 1)) {
                 loopSetProgressAndTime();
@@ -1171,20 +1151,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     }
 
     /**
-     * 显示小窗口的关闭按键
-     */
-    public void setSmallCloseShow() {
-        mSmallClose.setVisibility(VISIBLE);
-    }
-
-    /**
-     * 隐藏小窗口的关闭按键
-     */
-    public void setSmallCloseHide() {
-        mSmallClose.setVisibility(GONE);
-    }
-
-    /**
      * 退出全屏，主要用于返回键
      *
      * @return 返回是否全屏
@@ -1245,7 +1211,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      * 缓冲进度/缓存进度
      */
     public int getBuffterPoint() {
-        return mBuffterPoint;
+        return mBufferPoint;
     }
 
 }

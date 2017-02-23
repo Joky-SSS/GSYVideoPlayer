@@ -11,14 +11,13 @@ import android.widget.SeekBar;
 
 import com.shuyu.gsyvideoplayer.GSYPreViewManager;
 import com.shuyu.gsyvideoplayer.GSYTextureView;
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.R;
 
 /**
  * Created by shuyu on 2016/12/10.
  */
 
-public class CustomGSYVideoPlayer extends StandardGSYVideoPlayer {
+public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     private RelativeLayout mPreviewLayout;
 
@@ -35,15 +34,15 @@ public class CustomGSYVideoPlayer extends StandardGSYVideoPlayer {
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
      */
-    public CustomGSYVideoPlayer(Context context, Boolean fullFlag) {
+    public PreviewGSYVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
     }
 
-    public CustomGSYVideoPlayer(Context context) {
+    public PreviewGSYVideoPlayer(Context context) {
         super(context);
     }
 
-    public CustomGSYVideoPlayer(Context context, AttributeSet attrs) {
+    public PreviewGSYVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -164,7 +163,7 @@ public class CustomGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
         GSYBaseVideoPlayer gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
-        CustomGSYVideoPlayer customGSYVideoPlayer = (CustomGSYVideoPlayer) gsyBaseVideoPlayer;
+        PreviewGSYVideoPlayer customGSYVideoPlayer = (PreviewGSYVideoPlayer) gsyBaseVideoPlayer;
         customGSYVideoPlayer.mOpenPreView = mOpenPreView;
         return gsyBaseVideoPlayer;
     }

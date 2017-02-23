@@ -52,7 +52,6 @@ public class ListVideoUtil {
     private int speed = 1; // 播放速度，仅支持6.0
     private int systemUiVisibility;
     private boolean isFull; //当前是否全屏
-    private boolean isSmall; //当前是否小屏
     private boolean hideStatusBar; //是否隐藏有状态bar
     private boolean hideActionBar; //是否隐藏有状态ActionBar
     private boolean isLoop;//循环
@@ -121,10 +120,6 @@ public class ListVideoUtil {
      * @param url 播放的URL
      */
     public void startPlay(String url) {
-
-        if (isSmall()) {
-            smallVideoToNormal();
-        }
 
         this.url = url;
 
@@ -399,30 +394,6 @@ public class ListVideoUtil {
     }
 
     /**
-     * 显示小屏幕效果
-     *
-     * @param size      小视频的大小
-     * @param actionBar 是否有actionBar
-     * @param statusBar 是否有状态栏
-     */
-    public void showSmallVideo(Point size, final boolean actionBar, final boolean statusBar) {
-        if (gsyVideoPlayer.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PLAYING) {
-            gsyVideoPlayer.showSmallVideo(size, actionBar, statusBar);
-            isSmall = true;
-        }
-    }
-
-
-    /**
-     * 恢复小屏幕效果
-     */
-    public void smallVideoToNormal() {
-        isSmall = false;
-        gsyVideoPlayer.hideSmallVideo();
-    }
-
-
-    /**
      * 设置全屏显示的viewGroup
      *
      * @param fullViewContainer viewGroup
@@ -521,11 +492,6 @@ public class ListVideoUtil {
     public String getPlayTAG() {
         return TAG;
     }
-
-    public boolean isSmall() {
-        return isSmall;
-    }
-
 
     public boolean isLoop() {
         return isLoop;
