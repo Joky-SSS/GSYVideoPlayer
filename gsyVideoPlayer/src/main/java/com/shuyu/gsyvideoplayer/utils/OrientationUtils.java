@@ -21,32 +21,27 @@ public class OrientationUtils {
     private static final String TAG = "OrientationUtils";
 
     private Activity activity;
-    private GSYBaseVideoPlayer gsyVideoPlayer;
 
-    private int currentScreenType;
-    private int preferredLandScreenType = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+    public int currentScreenType;
+    private int preferredLandScreenType = PlayerConfig.loadLandScreenType();
 
     /**
      * @param activity
-     * @param gsyVideoPlayer
      */
-    public OrientationUtils(Activity activity, GSYBaseVideoPlayer gsyVideoPlayer) {
+    public OrientationUtils(Activity activity) {
         this.activity = activity;
-        this.gsyVideoPlayer = gsyVideoPlayer;
         this.currentScreenType = getScreenOrientation();
     }
 
     public void backToLand() {
         currentScreenType = preferredLandScreenType;
         activity.setRequestedOrientation(currentScreenType);
-        gsyVideoPlayer.getFullscreenButton().setImageResource(R.drawable.video_shrink);
     }
 
     // 强制切换回竖屏
     public void backToPort() {
         currentScreenType = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         activity.setRequestedOrientation(currentScreenType);
-        gsyVideoPlayer.getFullscreenButton().setImageResource(R.drawable.video_enlarge);
     }
 
     // 切换横屏和反向横屏
@@ -57,6 +52,7 @@ public class OrientationUtils {
             preferredLandScreenType = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         }
         currentScreenType = preferredLandScreenType;
+        PlayerConfig.saveLandScreenType(currentScreenType);
         activity.setRequestedOrientation(currentScreenType);
     }
 

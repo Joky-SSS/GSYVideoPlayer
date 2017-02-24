@@ -157,8 +157,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         lp.gravity = Gravity.CENTER;
         gsyVideoPlayer.setLayoutParams(lp);
 
-        mOrientationUtils = new OrientationUtils((Activity) context, gsyVideoPlayer);
-
         gsyVideoPlayer.setVisibility(VISIBLE);
         frameLayout.setVisibility(VISIBLE);
 
@@ -303,7 +301,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
     public void clearFullscreenLayout() {
         if (mOrientationUtils != null) {
             mOrientationUtils.backToPort();
-            mOrientationUtils = null;
+//            mOrientationUtils = null;
         }
 
         backToNormal();

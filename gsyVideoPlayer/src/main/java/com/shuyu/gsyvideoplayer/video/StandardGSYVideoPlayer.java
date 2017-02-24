@@ -830,14 +830,14 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
     }
 
-    private void startDismissControlViewTimer() {
+    protected void startDismissControlViewTimer() {
         cancelDismissControlViewTimer();
         DISMISS_CONTROL_VIEW_TIMER = new Timer();
         mDismissControlViewTimerTask = new DismissControlViewTimerTask();
         DISMISS_CONTROL_VIEW_TIMER.schedule(mDismissControlViewTimerTask, 2500);
     }
 
-    private void cancelDismissControlViewTimer() {
+    protected void cancelDismissControlViewTimer() {
         if (DISMISS_CONTROL_VIEW_TIMER != null) {
             DISMISS_CONTROL_VIEW_TIMER.cancel();
         }
