@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -130,7 +131,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
         mLoadingProgressBar = findViewById(R.id.loading);
 
-        mThumbImageViewLayout.setVisibility(GONE);
+        mThumbImageViewLayout.setVisibility(VISIBLE);
         mThumbImageViewLayout.setOnClickListener(this);
         mBackButton.setOnClickListener(this);
         if (mThumbImageView != null && !mIfCurrentIsFullscreen) {
