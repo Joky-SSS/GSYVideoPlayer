@@ -51,7 +51,7 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
 public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
 
-    protected Timer DISMISS_CONTROL_VIEW_TIMER;
+    protected Timer mDismissControlViewTimer;
 
     protected ProgressBar mBottomProgressBar;
 
@@ -223,6 +223,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         switch (mCurrentState) {
             case CURRENT_STATE_NORMAL:
                 changeUiToNormal();
+                cancelDismissControlViewTimer();
                 break;
             case CURRENT_STATE_PREPARING:
                 changeUiToPrepareingShow();
@@ -833,17 +834,19 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     protected void startDismissControlViewTimer() {
         cancelDismissControlViewTimer();
-        DISMISS_CONTROL_VIEW_TIMER = new Timer();
+        mDismissControlViewTimer = new Timer();
         mDismissControlViewTimerTask = new DismissControlViewTimerTask();
-        DISMISS_CONTROL_VIEW_TIMER.schedule(mDismissControlViewTimerTask, 2500);
+        mDismissControlViewTimer.schedule(mDismissControlViewTimerTask, 2500);
     }
 
     protected void cancelDismissControlViewTimer() {
-        if (DISMISS_CONTROL_VIEW_TIMER != null) {
-            DISMISS_CONTROL_VIEW_TIMER.cancel();
+        if (mDismissControlViewTimer != null) {
+            mDismissControlViewTimer.cancel();
+            mDismissControlViewTimer = null;
         }
         if (mDismissControlViewTimerTask != null) {
             mDismissControlViewTimerTask.cancel();
+            mDismissControlViewTimer = null;
         }
 
     }

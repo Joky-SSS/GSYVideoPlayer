@@ -31,6 +31,8 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideSupportActionBar;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
@@ -454,10 +456,16 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
     }
 
     /**
-     * 播放速度，只支持6.0以上
+     * 播放速度
      */
     public void setSpeed(float speed) {
         this.mSpeed = speed;
+        if (GSYVideoManager.instance().getMediaPlayer() != null
+                && GSYVideoManager.instance().getMediaPlayer() instanceof IjkMediaPlayer) {
+            if (speed > 0) {
+                ((IjkMediaPlayer) GSYVideoManager.instance().getMediaPlayer()).setSpeed(speed);
+            }
+        }
     }
 
     public boolean isHideKey() {
