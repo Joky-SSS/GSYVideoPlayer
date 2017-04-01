@@ -16,7 +16,7 @@ public class PlayerConfig {
     private static final String KEY_I_DANMU_SIZE = "danmu_size";
     private static final String KEY_I_LAND_SCREEN_TYPE = "land_screen_type";
 
-    private static final int DEFAULT_DANMU_OPACITY = 0;
+    private static final int DEFAULT_DANMU_OPACITY = 80;
     private static final int DEFAULT_DANMU_SIZE = 50;
     private static final int DEFAULT_LAND_SCREEN_TYPE = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 
