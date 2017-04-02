@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
@@ -19,7 +20,7 @@ import com.shuyu.gsyvideoplayer.R;
 
 public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
 
-    private RelativeLayout mPreviewLayout;
+    private FrameLayout mPreviewLayout;
 
     private GSYTextureView mPreviewTexture;
 
@@ -53,7 +54,7 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     private void initView() {
-        mPreviewLayout = (RelativeLayout) findViewById(R.id.preview_layout);
+        mPreviewLayout = (FrameLayout) findViewById(R.id.preview_layout);
     }
 
     @Override
@@ -95,8 +96,7 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
         });
         mPreviewTexture.setRotation(mRotate);
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mPreviewLayout.addView(mPreviewTexture, layoutParams);
     }
 
@@ -110,13 +110,13 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
     public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
         super.onProgressChanged(seekBar, progress, fromUser);
         if (fromUser && mOpenPreView) {
-            int width = seekBar.getWidth();
-            int offset = (int) (width - (getResources().getDimension(R.dimen.seek_bar_image) / 2)) / 100 * progress;
+//            int width = seekBar.getWidth();
+//            int offset = (int) (width - (getResources().getDimension(R.dimen.seek_bar_image) / 2)) / 100 * progress;
 
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPreviewLayout.getLayoutParams();
-            layoutParams.leftMargin = offset;
+//            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPreviewLayout.getLayoutParams();
+//            layoutParams.leftMargin = offset;
             //设置帧预览图的显示位置
-            mPreviewLayout.setLayoutParams(layoutParams);
+//            mPreviewLayout.setLayoutParams(layoutParams);
             if (GSYPreViewManager.instance().getMediaPlayer() != null
                     && mHadPlay && (mOpenPreView)
                     && GSYPreViewManager.instance().isSeekToComplete()) {
@@ -133,7 +133,7 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
         super.onStartTrackingTouch(seekBar);
         if (mOpenPreView) {
             mIsFromUser = true;
-            mPreviewLayout.setVisibility(VISIBLE);
+//            mPreviewLayout.setVisibility(VISIBLE);
             mPreProgress = -2;
         }
     }
@@ -146,7 +146,7 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
             }
             super.onStopTrackingTouch(seekBar);
             mIsFromUser = false;
-            mPreviewLayout.setVisibility(GONE);
+//            mPreviewLayout.setVisibility(GONE);
         } else {
             super.onStopTrackingTouch(seekBar);
         }

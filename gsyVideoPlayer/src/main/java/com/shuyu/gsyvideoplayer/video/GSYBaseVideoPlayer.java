@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.github.rubensousa.previewseekbar.PreviewSeekBar;
 import com.shuyu.gsyvideoplayer.GSYTextureView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
@@ -94,7 +95,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
     protected View mStartButton;
 
-    protected SeekBar mProgressBar;
+    protected PreviewSeekBar mProgressBar;
 
     protected ImageView mFullscreenButton;
 

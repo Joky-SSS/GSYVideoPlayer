@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.Md5FileNameGenerator;
+import com.github.rubensousa.previewseekbar.PreviewSeekBar;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.StorageUtils;
@@ -159,7 +160,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         mBackButton = (ImageView) findViewById(R.id.back);
         mCoverImageView = (ImageView) findViewById(R.id.cover);
         mFullscreenButton = (ImageView) findViewById(R.id.fullscreen);
-        mProgressBar = (SeekBar) findViewById(R.id.progress);
+        mProgressBar = (PreviewSeekBar) findViewById(R.id.progress);
         mCurrentTimeTextView = (TextView) findViewById(R.id.current);
         mTotalTimeTextView = (TextView) findViewById(R.id.total);
         mBottomContainer = (ViewGroup) findViewById(R.id.layout_bottom);
