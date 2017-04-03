@@ -171,7 +171,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         mStartButton.setOnClickListener(this);
         mFullscreenButton.setOnClickListener(this);
         mProgressBar.setOnSeekBarChangeListener(this);
-        mBottomContainer.setOnClickListener(this);
+//        mBottomContainer.setOnClickListener(this); // 不要乱加点击事件啊，醉了。。。
         mTextureViewContainer.setOnClickListener(this);
         mProgressBar.setOnTouchListener(this);
 
