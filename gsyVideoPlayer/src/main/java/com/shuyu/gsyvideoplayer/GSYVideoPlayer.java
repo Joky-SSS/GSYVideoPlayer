@@ -816,10 +816,10 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
             mTextureViewContainer.removeAllViews();
         }
 
-        if (IF_FULLSCREEN_FROM_NORMAL) {//如果在进入全屏后播放完就初始化自己非全屏的控件
+        if (IF_FULLSCREEN_FROM_NORMAL) { //如果在进入全屏后播放完就初始化自己非全屏的控件
             IF_FULLSCREEN_FROM_NORMAL = false;
             if (GSYVideoManager.instance().lastListener() != null) {
-                GSYVideoManager.instance().lastListener().onCompletion();//回到上面的onAutoCompletion
+                GSYVideoManager.instance().lastListener().onCompletion(); //回到上面的onAutoCompletion
             }
         }
         if (!mIfCurrentIsFullscreen) {
