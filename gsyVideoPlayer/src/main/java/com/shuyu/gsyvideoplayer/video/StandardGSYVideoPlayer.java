@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -59,7 +60,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     protected TextView mTitleTextView; //title
 
-    protected RelativeLayout mThumbImageViewLayout;//封面父布局
+    protected FrameLayout mThumbImageViewLayout;//封面父布局
 
     private View mThumbImageView; //封面
 
@@ -126,7 +127,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         super.init(context);
         mBottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
         mTitleTextView = (TextView) findViewById(R.id.title);
-        mThumbImageViewLayout = (RelativeLayout) findViewById(R.id.thumb);
+        mThumbImageViewLayout = (FrameLayout) findViewById(R.id.thumb);
         mLockScreen = (ImageView) findViewById(R.id.lock_screen);
 
         mLoadingProgressBar = findViewById(R.id.loading);
@@ -882,11 +883,12 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     }
 
     private void resolveThumbImage(View thumb) {
+//        ViewGroup.LayoutParams layoutParams = thumb.getLayoutParams();
+//        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//        thumb.setLayoutParams(layoutParams);
+        thumb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mThumbImageViewLayout.addView(thumb);
-        ViewGroup.LayoutParams layoutParams = thumb.getLayoutParams();
-        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        thumb.setLayoutParams(layoutParams);
     }
 
     /***
@@ -971,7 +973,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     /**
      * 封面布局
      */
-    public RelativeLayout getThumbImageViewLayout() {
+    public FrameLayout getThumbImageViewLayout() {
         return mThumbImageViewLayout;
     }
 
