@@ -38,7 +38,6 @@ dependencies {
 //    compile 'com.github.ctiao:DanmakuFlameMaster:0.8.0'
 //    compile 'com.github.ctiao:ndkbitmap-armv7a:0.8.0'
 //    compile 'com.github.ctiao:ndkbitmap-x86:0.8.0' // Optional
-    compile 'com.andkulikov:transitionseverywhere:1.7.0'
     compile 'com.danikula:videocache:2.6.4'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
