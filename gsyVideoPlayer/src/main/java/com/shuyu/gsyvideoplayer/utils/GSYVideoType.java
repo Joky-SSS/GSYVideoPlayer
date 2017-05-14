@@ -28,8 +28,6 @@ public class GSYVideoType {
     //硬解码标志
     private static boolean MEDIA_CODEC_FLAG = false;
 
-
-
     /**
      * 使能硬解码，播放前设置
      */
