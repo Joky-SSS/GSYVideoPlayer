@@ -110,13 +110,6 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
     public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
         super.onProgressChanged(seekBar, progress, fromUser);
         if (fromUser && mOpenPreView) {
-//            int width = seekBar.getWidth();
-//            int offset = (int) (width - (getResources().getDimension(R.dimen.seek_bar_image) / 2)) / 100 * progress;
-
-//            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPreviewLayout.getLayoutParams();
-//            layoutParams.leftMargin = offset;
-            //设置帧预览图的显示位置
-//            mPreviewLayout.setLayoutParams(layoutParams);
             if (GSYPreViewManager.instance().getMediaPlayer() != null
                     && mHadPlay && (mOpenPreView)
                     && GSYPreViewManager.instance().isSeekToComplete()) {
@@ -133,7 +126,6 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
         super.onStartTrackingTouch(seekBar);
         if (mOpenPreView) {
             mIsFromUser = true;
-//            mPreviewLayout.setVisibility(VISIBLE);
             mPreProgress = -2;
         }
     }
@@ -146,7 +138,6 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
             }
             super.onStopTrackingTouch(seekBar);
             mIsFromUser = false;
-//            mPreviewLayout.setVisibility(GONE);
         } else {
             super.onStopTrackingTouch(seekBar);
         }
