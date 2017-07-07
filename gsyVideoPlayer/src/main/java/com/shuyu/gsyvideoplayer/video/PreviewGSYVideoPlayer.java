@@ -7,7 +7,6 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import com.shuyu.gsyvideoplayer.GSYPreViewManager;
@@ -102,7 +101,7 @@ public class PreviewGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     protected void prepareVideo() {
-        GSYPreViewManager.instance().prepare(mUrl, mMapHeadData, mLooping, mSpeed);
+        GSYPreViewManager.instance().prepare(url, mapHeadData, mLooping, mSpeed);
         super.prepareVideo();
     }
 

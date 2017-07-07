@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.rubensousa.previewseekbar.PreviewSeekBar;
@@ -27,7 +25,6 @@ import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,8 +48,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
     protected boolean mHideKey = true;//是否隐藏虚拟按键
 
-    protected boolean mCache = false;//是否播边边缓冲
-
     protected boolean mNeedShowWifiTip = true; //是否需要显示流量提示
 
     protected int mCurrentState = -1; //当前的播放状态
@@ -71,23 +66,15 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
     protected boolean mHadPlay = false;//是否播放过
 
-    protected boolean mCacheFile = false; //是否是缓存的文件
-
     protected Context mContext;
 
-    protected String mOriginUrl; //原来的url
-
-    protected String mUrl; //转化后的URL
-
-    protected Object[] mObjects;
-
-    protected File mCachePath;
+    protected String url; // 视频URL
 
     protected ViewGroup mTextureViewContainer; //渲染控件父类
 
     protected VideoAllCallBack mVideoAllCallBack;
 
-    protected Map<String, String> mMapHeadData = new HashMap<>();
+    protected Map<String, String> mapHeadData = new HashMap<>();
 
     protected GSYTextureView mTextureView;
 
@@ -108,8 +95,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
     protected Bitmap mFullPauseBitmap = null;//暂停时的全屏图片；
 
     protected OrientationUtils mOrientationUtils;
-
-    private Handler mHandler = new Handler();
 
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
@@ -165,7 +150,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
         if (mVideoAllCallBack != null) {
             Debuger.printfError("onEnterFullscreen");
-            mVideoAllCallBack.onEnterFullscreen(mUrl, mObjects);
+            mVideoAllCallBack.onEnterFullscreen(url);
         }
     }
 
@@ -189,7 +174,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
         if (mVideoAllCallBack != null) {
             Debuger.printfError("onQuitFullscreen");
-            mVideoAllCallBack.onQuitFullscreen(mUrl, mObjects);
+            mVideoAllCallBack.onQuitFullscreen(url);
         }
 
         showNavKey(mContext, mSystemUiVisibility);
@@ -263,10 +248,9 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             resolveFullVideoShow(context, gsyVideoPlayer, frameLayout);
 
             gsyVideoPlayer.mHadPlay = mHadPlay;
-            gsyVideoPlayer.mCacheFile = mCacheFile;
             gsyVideoPlayer.mFullPauseBitmap = mFullPauseBitmap;
             gsyVideoPlayer.mNeedShowWifiTip = mNeedShowWifiTip;
-            gsyVideoPlayer.setUp(mOriginUrl, mCache, mCachePath, mMapHeadData, mObjects);
+            gsyVideoPlayer.setUp(url, mapHeadData);
             gsyVideoPlayer.setStateAndUi(mCurrentState);
             gsyVideoPlayer.addTextureView();
 
@@ -372,23 +356,19 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
      * 设置播放URL
      *
      * @param url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param objects
      * @return
      */
-    public abstract boolean setUp(String url, boolean cacheWithPlay, File cachePath, Object... objects);
+    public abstract boolean setUp(String url);
 
     /**
      * 设置播放URL
      *
      * @param url
-     * @param cacheWithPlay 是否边播边缓存
      * @param mapHeadData
-     * @param objects
      * @return
      */
 
-    public abstract boolean setUp(String url, boolean cacheWithPlay, File cachePath, Map<String, String> mapHeadData, Object... objects);
+    public abstract boolean setUp(String url, Map<String, String> mapHeadData);
 
     /**
      * 设置播放显示状态

@@ -5,11 +5,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,7 +18,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +30,6 @@ import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,7 +37,6 @@ import moe.codeest.enviews.ENDownloadView;
 import moe.codeest.enviews.ENPlayView;
 
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
-import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
 
 
 /**
@@ -178,30 +173,14 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
      * 设置播放URL
      *
      * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param objects       object[0]目前为title
      * @return
      */
     @Override
-    public boolean setUp(String url, boolean cacheWithPlay, Object... objects) {
-        return setUp(url, cacheWithPlay, (File) null, objects);
-    }
-
-    /**
-     * 设置播放URL
-     *
-     * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
-     * @param objects       object[0]目前为title
-     * @return
-     */
-    @Override
-    public boolean setUp(String url, boolean cacheWithPlay, File cachePath, Object... objects) {
-        if (super.setUp(url, cacheWithPlay, cachePath, objects)) {
-            if (objects != null && objects.length > 0) {
-                mTitleTextView.setText(objects[0].toString());
-            }
+    public boolean setUp(String url) {
+        if (super.setUp(url)) {
+//            if (objects != null && objects.length > 0) {
+//                mTitleTextView.setText(objects[0].toString());
+//            }
             if (mIfCurrentIsFullscreen) {
                 mFullscreenButton.setImageResource(R.drawable.video_shrink);
             } else {
@@ -299,12 +278,12 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             if (!mThumbPlay) {
                 return;
             }
-            if (TextUtils.isEmpty(mUrl)) {
+            if (TextUtils.isEmpty(url)) {
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (mCurrentState == CURRENT_STATE_NORMAL) {
-                if (!mUrl.startsWith("file") && !CommonUtil.isWifiConnected(getContext()) && mNeedShowWifiTip) {
+                if (!url.startsWith("file") && !CommonUtil.isWifiConnected(getContext()) && mNeedShowWifiTip) {
                     showWifiDialog();
                     return;
                 }
@@ -316,10 +295,10 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             if (mStandardVideoAllCallBack != null && isCurrentMediaListener()) {
                 if (mIfCurrentIsFullscreen) {
                     Debuger.printfLog("onClickBlankFullscreen");
-                    mStandardVideoAllCallBack.onClickBlankFullscreen(mUrl, mObjects);
+                    mStandardVideoAllCallBack.onClickBlankFullscreen(url);
                 } else {
                     Debuger.printfLog("onClickBlank");
-                    mStandardVideoAllCallBack.onClickBlank(mUrl, mObjects);
+                    mStandardVideoAllCallBack.onClickBlank(url);
                 }
             }
             startDismissControlViewTimer();
@@ -356,7 +335,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     public void startPlayLogic() {
         if (mStandardVideoAllCallBack != null) {
             Debuger.printfLog("onClickStartThumb");
-            mStandardVideoAllCallBack.onClickStartThumb(mUrl, mObjects);
+            mStandardVideoAllCallBack.onClickStartThumb(url);
         }
         prepareVideo();
         startDismissControlViewTimer();
@@ -405,7 +384,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     protected void setProgressAndTime(int progress, int secProgress, int currentTime, int totalTime) {
         super.setProgressAndTime(progress, secProgress, currentTime, totalTime);
         if (progress != 0) mBottomProgressBar.setProgress(progress);
-        if (secProgress != 0 && !mCacheFile) mBottomProgressBar.setSecondaryProgress(secProgress);
+        if (secProgress != 0) mBottomProgressBar.setSecondaryProgress(secProgress);
     }
 
     @Override

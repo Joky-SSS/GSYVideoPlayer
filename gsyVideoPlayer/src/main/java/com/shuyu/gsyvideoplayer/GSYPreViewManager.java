@@ -36,14 +36,15 @@ public class GSYPreViewManager implements IMediaPlayer.OnPreparedListener, IjkMe
 
     private boolean seekToComplete = true;
 
-    public static synchronized GSYPreViewManager instance() {
-        if (videoManager == null) {
-            videoManager = new GSYPreViewManager();
-        }
-        return videoManager;
+    private static class SingletonHolder {
+        private static final GSYPreViewManager INSTANCE = new GSYPreViewManager();
     }
 
-    public GSYPreViewManager() {
+    public static final GSYPreViewManager instance() {
+        return SingletonHolder.INSTANCE;
+    }
+
+    private GSYPreViewManager() {
         mediaPlayer = new IjkMediaPlayer();
         mMediaHandlerThread = new HandlerThread(TAG);
         mMediaHandlerThread.start();

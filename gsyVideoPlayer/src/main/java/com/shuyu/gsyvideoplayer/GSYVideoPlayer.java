@@ -8,7 +8,6 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
@@ -23,15 +22,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.danikula.videocache.HttpProxyCacheServer;
-import com.danikula.videocache.file.Md5FileNameGenerator;
 import com.github.rubensousa.previewseekbar.PreviewSeekBar;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.utils.StorageUtils;
 import com.shuyu.gsyvideoplayer.video.GSYBaseVideoPlayer;
 
-import java.io.File;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,15 +37,12 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.getTextSpeed;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
 
-
 /**
  * Created by shuyu on 2016/11/11.
  */
-
 public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener, TextureView.SurfaceTextureListener {
 
     public static final String TAG = "GSYVideoPlayer";
-
 
     public static final int CURRENT_STATE_NORMAL = 0; //正常
     public static final int CURRENT_STATE_PREPARING = 1; //准备中
@@ -189,31 +181,15 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      * 设置播放URL
      *
      * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param objects       object[0]目前为title
-     * @return
-     */
-    public boolean setUp(String url, boolean cacheWithPlay, Object... objects) {
-        return setUp(url, cacheWithPlay, null, objects);
-    }
-
-
-    /**
-     * 设置播放URL
-     *
-     * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
      * @param mapHeadData   头部信息
-     * @param objects       object[0]目前为title
      * @return
      */
     @Override
-    public boolean setUp(String url, boolean cacheWithPlay, File cachePath, Map<String, String> mapHeadData, Object... objects) {
-        if (setUp(url, cacheWithPlay, cachePath, objects)) {
-            this.mMapHeadData.clear();
+    public boolean setUp(String url, Map<String, String> mapHeadData) {
+        if (setUp(url)) {
+            this.mapHeadData.clear();
             if (mapHeadData != null)
-                this.mMapHeadData.putAll(mapHeadData);
+                this.mapHeadData.putAll(mapHeadData);
             return true;
         }
         return false;
@@ -223,32 +199,15 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      * 设置播放URL
      *
      * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
-     * @param objects       object[0]目前为title
      * @return
      */
     @Override
-    public boolean setUp(String url, boolean cacheWithPlay, File cachePath, Object... objects) {
-        mCache = cacheWithPlay;
-        mCachePath = cachePath;
-        mOriginUrl = url;
+    public boolean setUp(String url) {
         if (isCurrentMediaListener() &&
                 (System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) < FULL_SCREEN_NORMAL_DELAY)
             return false;
         mCurrentState = CURRENT_STATE_NORMAL;
-        if (cacheWithPlay && url.startsWith("http") && !url.contains("127.0.0.1")) {
-            HttpProxyCacheServer proxy = GSYVideoManager.getProxy(getContext().getApplicationContext(), cachePath);
-            //此处转换了url，然后再赋值给mUrl。
-            url = proxy.getProxyUrl(url);
-            mCacheFile = (!url.startsWith("http"));
-            //注册上缓冲监听
-            if (!mCacheFile && GSYVideoManager.instance() != null) {
-                proxy.registerCacheListener(GSYVideoManager.instance(), mOriginUrl);
-            }
-        }
-        this.mUrl = url;
-        this.mObjects = objects;
+        this.url = url;
         setStateAndUi(CURRENT_STATE_NORMAL);
         return true;
     }
@@ -301,12 +260,12 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
             hideNavKey(mContext);
         }
         if (i == R.id.start) {
-            if (TextUtils.isEmpty(mUrl)) {
+            if (TextUtils.isEmpty(url)) {
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (mCurrentState == CURRENT_STATE_NORMAL || mCurrentState == CURRENT_STATE_ERROR) {
-                if (!mUrl.startsWith("file") && !CommonUtil.isWifiConnected(getContext())
+                if (!url.startsWith("file") && !CommonUtil.isWifiConnected(getContext())
                         && mNeedShowWifiTip) {
                     showWifiDialog();
                     return;
@@ -318,20 +277,20 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                     if (mIfCurrentIsFullscreen) {
                         Debuger.printfLog("onClickStopFullscreen");
-                        mVideoAllCallBack.onClickStopFullscreen(mUrl, mObjects);
+                        mVideoAllCallBack.onClickStopFullscreen(url);
                     } else {
                         Debuger.printfLog("onClickStop");
-                        mVideoAllCallBack.onClickStop(mUrl, mObjects);
+                        mVideoAllCallBack.onClickStop(url);
                     }
                 }
             } else if (mCurrentState == CURRENT_STATE_PAUSE) {
                 if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                     if (mIfCurrentIsFullscreen) {
                         Debuger.printfLog("onClickResumeFullscreen");
-                        mVideoAllCallBack.onClickResumeFullscreen(mUrl, mObjects);
+                        mVideoAllCallBack.onClickResumeFullscreen(url);
                     } else {
                         Debuger.printfLog("onClickResume");
-                        mVideoAllCallBack.onClickResume(mUrl, mObjects);
+                        mVideoAllCallBack.onClickResume(url);
                     }
                 }
                 GSYVideoManager.instance().getMediaPlayer().start();
@@ -342,7 +301,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         } else if (i == R.id.surface_container && mCurrentState == CURRENT_STATE_ERROR) {
             if (mVideoAllCallBack != null) {
                 Debuger.printfLog("onClickStartError");
-                mVideoAllCallBack.onClickStartError(mUrl, mObjects);
+                mVideoAllCallBack.onClickStartError(url);
             }
             prepareVideo();
         }
@@ -357,10 +316,10 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     private void startButtonLogic() {
         if (mVideoAllCallBack != null && mCurrentState == CURRENT_STATE_NORMAL) {
             Debuger.printfLog("onClickStartIcon");
-            mVideoAllCallBack.onClickStartIcon(mUrl, mObjects);
+            mVideoAllCallBack.onClickStartIcon(url);
         } else if (mVideoAllCallBack != null) {
             Debuger.printfLog("onClickStartError");
-            mVideoAllCallBack.onClickStartError(mUrl, mObjects);
+            mVideoAllCallBack.onClickStartError(url);
         }
         prepareVideo();
     }
@@ -379,7 +338,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         ((Activity) getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mBackUpPlayingBufferState = -1;
-        GSYVideoManager.instance().prepare(mUrl, mMapHeadData, mLooping, mSpeed);
+        GSYVideoManager.instance().prepare(url, mapHeadData, mLooping, mSpeed);
         setStateAndUi(CURRENT_STATE_PREPARING);
     }
 
@@ -600,17 +559,17 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                         mProgressBar.setProgress(progress);
                         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                             Debuger.printfLog("onTouchScreenSeekPosition");
-                            mVideoAllCallBack.onTouchScreenSeekPosition(mUrl, mObjects);
+                            mVideoAllCallBack.onTouchScreenSeekPosition(url);
                         }
                     } else if (mBrightness) {
                         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                             Debuger.printfLog("onTouchScreenSeekLight");
-                            mVideoAllCallBack.onTouchScreenSeekLight(mUrl, mObjects);
+                            mVideoAllCallBack.onTouchScreenSeekLight(url);
                         }
                     } else if (mChangeVolume) {
                         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                             Debuger.printfLog("onTouchScreenSeekVolume");
-                            mVideoAllCallBack.onTouchScreenSeekVolume(mUrl, mObjects);
+                            mVideoAllCallBack.onTouchScreenSeekVolume(url);
                         }
                     }
                     startProgressTimer();
@@ -746,10 +705,10 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
             if (isIfCurrentIsFullscreen()) {
                 Debuger.printfLog("onClickSeekbarFullscreen");
-                mVideoAllCallBack.onClickSeekbarFullscreen(mUrl, mObjects);
+                mVideoAllCallBack.onClickSeekbarFullscreen(url);
             } else {
                 Debuger.printfLog("onClickSeekbar");
-                mVideoAllCallBack.onClickSeekbar(mUrl, mObjects);
+                mVideoAllCallBack.onClickSeekbar(url);
             }
         }
         if (GSYVideoManager.instance().getMediaPlayer() != null && mHadPlay) {
@@ -781,7 +740,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
             Debuger.printfLog("onPrepared");
-            mVideoAllCallBack.onPrepared(mUrl, mObjects);
+            mVideoAllCallBack.onPrepared(url);
         }
 
         if (GSYVideoManager.instance().getMediaPlayer() != null && mSeekOnStart > 0) {
@@ -796,7 +755,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     public void onAutoCompletion() {
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
             Debuger.printfLog("onAutoComplete");
-            mVideoAllCallBack.onAutoComplete(mUrl, mObjects);
+            mVideoAllCallBack.onAutoComplete(url);
         }
         setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
         if (mTextureViewContainer.getChildCount() > 0) {
@@ -859,9 +818,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     public void onError(int what, int extra) {
         if (what != 38 && what != -38) {
             setStateAndUi(CURRENT_STATE_ERROR);
-            deleteCacheFileWhenError();
             if (mVideoAllCallBack != null) {
-                mVideoAllCallBack.onPlayError(mUrl, mObjects);
+                mVideoAllCallBack.onPlayError(url);
             }
         }
     }
@@ -908,43 +866,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     @Override
     public void onBackFullscreen() {
 
-    }
-
-    /**
-     * 清除当前缓存
-     */
-    public void clearCurrentCache() {
-        if (mCacheFile) {
-            //是否为缓存文件
-            Debuger.printfError(" mCacheFile Local Error " + mUrl);
-            //可能是因为缓存文件除了问题
-            CommonUtil.deleteFile(mUrl.replace("file://", ""));
-            mUrl = mOriginUrl;
-        } else if (mUrl.contains("127.0.0.1")) {
-            //是否为缓存了未完成的文件
-            Md5FileNameGenerator md5FileNameGenerator = new Md5FileNameGenerator();
-            String name = md5FileNameGenerator.generate(mOriginUrl);
-            if (mCachePath != null) {
-                String path = mCachePath.getAbsolutePath() + File.separator + name + ".download";
-                CommonUtil.deleteFile(path);
-            } else {
-                String path = StorageUtils.getIndividualCacheDirectory
-                        (getContext().getApplicationContext()).getAbsolutePath()
-                        + File.separator + name + ".download";
-                CommonUtil.deleteFile(path);
-            }
-        }
-
-    }
-
-
-    /**
-     * 播放错误的时候，删除缓存文件
-     */
-    private void deleteCacheFileWhenError() {
-        clearCurrentCache();
-        Debuger.printfError("Link Or mCache Error, Please Try Again" + mUrl);
-        mUrl = mOriginUrl;
     }
 
     protected void startProgressTimer() {
@@ -1017,7 +938,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
             if (progress != 0) mProgressBar.setProgress(progress);
         }
         if (secProgress > 94) secProgress = 100;
-        if (secProgress != 0 && !mCacheFile) {
+        if (secProgress != 0) {
             mProgressBar.setSecondaryProgress(secProgress);
         }
         mTotalTimeTextView.setText(CommonUtil.stringForTime(totalTime));
