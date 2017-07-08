@@ -297,7 +297,6 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             mOrientationUtils.backToPort();
 //            mOrientationUtils = null;
         }
-
         backToNormal();
     }
 

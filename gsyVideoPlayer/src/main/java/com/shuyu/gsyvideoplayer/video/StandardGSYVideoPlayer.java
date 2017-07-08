@@ -178,9 +178,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     @Override
     public boolean setUp(String url) {
         if (super.setUp(url)) {
-//            if (objects != null && objects.length > 0) {
-//                mTitleTextView.setText(objects[0].toString());
-//            }
             if (mIfCurrentIsFullscreen) {
                 mFullscreenButton.setImageResource(R.drawable.video_shrink);
             } else {
