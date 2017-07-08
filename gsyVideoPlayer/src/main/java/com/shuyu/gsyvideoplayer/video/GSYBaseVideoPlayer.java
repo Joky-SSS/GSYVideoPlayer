@@ -2,6 +2,7 @@ package com.shuyu.gsyvideoplayer.video;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.IdRes;
@@ -110,6 +111,12 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
     public GSYBaseVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.gsy_video_player, 0, 0);
+        try {
+            mIfCurrentIsFullscreen = a.getBoolean(R.styleable.gsy_video_player_full_mode, false);
+        } finally {
+            a.recycle();
+        }
     }
 
     public GSYBaseVideoPlayer(Context context, AttributeSet attrs, int defStyleAttr) {
