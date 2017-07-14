@@ -46,7 +46,6 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
 
 public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
-
     protected Timer mDismissControlViewTimer;
 
     protected ProgressBar mBottomProgressBar;
@@ -55,7 +54,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     protected TextView mTitleTextView; //title
 
-    protected FrameLayout mThumbImageViewLayout;//封面父布局
+    protected FrameLayout mThumbImageViewLayout; //封面父布局
 
     private View mThumbImageView; //封面
 

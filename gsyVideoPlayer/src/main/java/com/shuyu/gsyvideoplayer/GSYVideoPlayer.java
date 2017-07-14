@@ -94,8 +94,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     protected int mSeekToInAdvance = -1; //// TODO: 2016/11/13 跳过广告
 
-    protected int mBufferPoint;//缓存进度
-
     protected int mSeekTimePosition; //手动改变滑动的位置
 
     protected int mSeekEndOffset; //手动滑动的起始偏移位置
@@ -207,7 +205,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 (System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) < FULL_SCREEN_NORMAL_DELAY)
             return false;
         mCurrentState = CURRENT_STATE_NORMAL;
-        this.url = url;
+        this.url = "async:" + url;
         setStateAndUi(CURRENT_STATE_NORMAL);
         return true;
     }
@@ -225,7 +223,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     cancelProgressTimer();
                     GSYVideoManager.instance().releaseMediaPlayer();
                     releasePauseCoverAndBitmap();
-                    mBufferPoint = 0;
                 }
                 if (mAudioManager != null) {
                     mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
@@ -929,7 +926,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         int position = getCurrentPositionWhenPlaying();
         int duration = getDuration();
         int progress = position * 100 / (duration == 0 ? 1 : duration);
-        int secProgress = getBuffterPoint();
+        int secProgress = GSYVideoManager.instance().getBufferPoint();
         setProgressAndTime(progress, secProgress, position, duration);
     }
 
@@ -1139,14 +1136,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     public void setSeekOnStart(long seekOnStart) {
         this.mSeekOnStart = seekOnStart;
-    }
-
-
-    /**
-     * 缓冲进度/缓存进度
-     */
-    public int getBuffterPoint() {
-        return mBufferPoint;
     }
 
 }

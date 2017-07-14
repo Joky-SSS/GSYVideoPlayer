@@ -61,6 +61,8 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     private boolean needMute = false; //是否需要静音
 
+    private int bufferPoint = 0;
+
     private static class SingletonHolder {
         private static final GSYVideoManager INSTANCE = new GSYVideoManager();
     }
@@ -158,7 +160,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
         try {
             if (GSYVideoType.isMediaCodec()) {
                 Debuger.printfLog("enable mediaCodec");
-                ((IjkMediaPlayer) mediaPlayer).setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+                ((IjkMediaPlayer) mediaPlayer).setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-avc", 1);
                 ((IjkMediaPlayer) mediaPlayer).setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
                 ((IjkMediaPlayer) mediaPlayer).setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1);
             }
@@ -250,6 +252,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     @Override
     public void onBufferingUpdate(IMediaPlayer mp, final int percent) {
+        bufferPoint = percent;
         mainThreadHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -403,5 +406,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
                 mediaPlayer.setVolume(1, 1);
             }
         }
+    }
+
+    public int getBufferPoint() {
+        return bufferPoint;
     }
 }
