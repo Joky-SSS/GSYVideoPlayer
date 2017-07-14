@@ -521,7 +521,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     }
                     if (mChangePosition) {
                         int totalTimeDuration = getDuration();
-                        mSeekTimePosition = (int) (mDownPosition + deltaX * totalTimeDuration / mScreenWidth);
+                        mSeekTimePosition = (int) (mDownPosition + deltaX * 100000 / mScreenWidth);
                         if (mSeekTimePosition > totalTimeDuration)
                             mSeekTimePosition = totalTimeDuration;
                         String seekTime = CommonUtil.stringForTime(mSeekTimePosition);
