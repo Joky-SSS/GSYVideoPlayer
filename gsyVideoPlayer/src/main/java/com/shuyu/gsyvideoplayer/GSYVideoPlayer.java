@@ -205,7 +205,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 (System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) < FULL_SCREEN_NORMAL_DELAY)
             return false;
         mCurrentState = CURRENT_STATE_NORMAL;
-        this.url = "async:" + url;
+        this.url = url;
         setStateAndUi(CURRENT_STATE_NORMAL);
         return true;
     }
