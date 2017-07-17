@@ -32,7 +32,7 @@ dependencies {
     implementation project(':previewseekbar')
     api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.0'
     api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.0'
-//    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.1' // Optional
+//    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.0' // Optional
     api project(':DanmakuFlameMaster')
     implementation 'com.android.support:support-v4:25.4.0'
     implementation 'com.android.support:appcompat-v7:25.4.0'
