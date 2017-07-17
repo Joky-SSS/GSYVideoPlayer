@@ -14,10 +14,12 @@ public class PlayerConfig {
 
     private static final String KEY_I_DANMU_OPACITY = "danmu_opacity";
     private static final String KEY_I_DANMU_SIZE = "danmu_size";
+    private static final String KEY_B_HARD_CODEC = "hard_codec";
     private static final String KEY_I_LAND_SCREEN_TYPE = "land_screen_type";
 
     private static final int DEFAULT_DANMU_OPACITY = 80;
     private static final int DEFAULT_DANMU_SIZE = 50;
+    private static final boolean DEFAULT_HARD_CODEC = false;
     private static final int DEFAULT_LAND_SCREEN_TYPE = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 
     public static void init(Context context) {
@@ -42,6 +44,16 @@ public class PlayerConfig {
 
     public static int loadDanmuSize() {
         return sp.getInt(KEY_I_DANMU_SIZE, DEFAULT_DANMU_SIZE);
+    }
+
+    public static void saveHardCodec(boolean hardCodec) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(KEY_B_HARD_CODEC, hardCodec);
+        editor.commit();
+    }
+
+    public static boolean loadHardCodec() {
+        return sp.getBoolean(KEY_B_HARD_CODEC, DEFAULT_HARD_CODEC);
     }
 
     public static void saveLandScreenType(int screenType) {
