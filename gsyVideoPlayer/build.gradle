@@ -34,6 +34,8 @@ dependencies {
     api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.1'
 //    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.1' // Optional
     api project(':DanmakuFlameMaster')
+    api 'com.github.ctiao:ndkbitmap-armv7a:0.8.3'
+//    api 'com.github.ctiao:ndkbitmap-x86:0.8.3' // Optional
     implementation "com.android.support:support-v4:${versions.supportLibrary}"
     implementation "com.android.support:appcompat-v7:${versions.supportLibrary}"
 }
