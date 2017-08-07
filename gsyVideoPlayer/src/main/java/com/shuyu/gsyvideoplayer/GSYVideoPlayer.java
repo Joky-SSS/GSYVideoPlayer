@@ -114,6 +114,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     protected boolean mBrightness = false;//是否改变亮度
 
+    protected boolean mTogglePlay = false; //是否双击手势
+
     protected boolean mFirstTouch = false;//是否首次触摸
 
     /**
