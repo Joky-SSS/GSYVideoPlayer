@@ -114,8 +114,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     protected boolean mBrightness = false;//是否改变亮度
 
-    protected boolean mTogglePlay = false; //是否双击手势
-
     protected boolean mFirstTouch = false;//是否首次触摸
 
     /**
@@ -164,7 +162,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         mStartButton.setOnClickListener(this);
         mFullscreenButton.setOnClickListener(this);
         mProgressBar.setOnSeekBarChangeListener(this);
-//        mBottomContainer.setOnClickListener(this); // 不要乱加点击事件啊，醉了。。。
         mTextureViewContainer.setOnClickListener(this);
         mProgressBar.setOnTouchListener(this);
 
@@ -484,7 +481,6 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     mShowVKey = false;
                     mBrightness = false;
                     mFirstTouch = true;
-
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float deltaX = x - mDownX;
