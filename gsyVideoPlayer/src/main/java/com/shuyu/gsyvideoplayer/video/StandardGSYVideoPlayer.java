@@ -224,25 +224,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
-        if (id == R.id.surface_container) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    break;
-                case MotionEvent.ACTION_UP:
-                    startDismissControlViewTimer();
-//                    if (mChangePosition) {
-//                        int duration = getDuration();
-//                        int progress = mSeekTimePosition * 100 / (duration == 0 ? 1 : duration);
-//                        mBottomProgressBar.setProgress(progress);
-//                    }
-                    if (!mChangePosition && !mChangeVolume && !mBrightness) {
-                        onClickUiToggle();
-                    }
-                    break;
-            }
-        } else if (id == R.id.progress) {
+        if (id == R.id.progress) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     cancelDismissControlViewTimer();
