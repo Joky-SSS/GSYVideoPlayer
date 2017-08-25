@@ -23,7 +23,7 @@ public class PlayerConfig {
     private static final int DEFAULT_DANMU_SIZE = 50;
     private static final int DEFAULT_DANMU_SPEED = 70;
     private static final float DEFAULT_PLAYER_SPEED = 1f;
-    private static final boolean DEFAULT_HARD_CODEC = false;
+    private static final boolean DEFAULT_HARD_CODEC = true; // 默认打开硬解
     private static final int DEFAULT_LAND_SCREEN_TYPE = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 
     public static void init(Context context) {
