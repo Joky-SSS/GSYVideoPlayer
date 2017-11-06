@@ -236,6 +236,9 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
 
         if (mIfCurrentIsFullscreen && mLockCurScreen && mNeedLockFull) {
+            onClickUiToggle(); // 显示锁屏
+            cancelDismissControlViewTimer();
+            startDismissControlViewTimer();
             return true;
         }
 
