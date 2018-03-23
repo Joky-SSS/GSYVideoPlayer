@@ -31,12 +31,12 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':previewseekbar')
     implementation project(':ijkplayer-armv7a')
-    api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
-//    api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
-//    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.3' // Optional
+    api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+//    api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+//    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.8' // Optional
     api project(':DanmakuFlameMaster')
-    api 'com.github.ctiao:ndkbitmap-armv7a:0.8.3'
-//    api 'com.github.ctiao:ndkbitmap-x86:0.8.3' // Optional
+    api 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
+//    api 'com.github.ctiao:ndkbitmap-x86:0.9.21' // Optional
     implementation "com.android.support:support-v4:${versions.supportLibrary}"
     implementation "com.android.support:appcompat-v7:${versions.supportLibrary}"
 }
