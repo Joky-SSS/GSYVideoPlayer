@@ -38,6 +38,11 @@ dependencies {
     api project(':DanmakuFlameMaster')
     api 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
     api 'com.github.ctiao:ndkbitmap-x86:0.9.21' // Optional
-    implementation "com.android.support:support-v4:${versions.supportLibrary}"
-    implementation "com.android.support:appcompat-v7:${versions.supportLibrary}"
+    implementation "androidx.legacy:legacy-support-v4:${versions.androidxLegacy}"
+    implementation "androidx.appcompat:appcompat:${versions.androidx}"
+}
+
+repositories {
+    mavenCentral()
+    google()
 }

@@ -3,7 +3,7 @@ package com.example.gsyvideoplayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.transition.Explode;
 import android.util.Log;
 import android.view.Window;
