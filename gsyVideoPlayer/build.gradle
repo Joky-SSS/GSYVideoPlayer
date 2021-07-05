@@ -3,7 +3,6 @@ apply plugin: 'com.android.library'
 android {
 
     compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
 
     defaultConfig {
 
@@ -36,10 +35,10 @@ dependencies {
 //    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.8' // Optional
     implementation 'com.shuyu:gsyVideoPlayer-ex_so:7.0.1'
     api project(':DanmakuFlameMaster')
-    api 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
-    api 'com.github.ctiao:ndkbitmap-x86:0.9.21' // Optional
-    implementation "androidx.legacy:legacy-support-v4:${versions.androidxLegacy}"
-    implementation "androidx.appcompat:appcompat:${versions.androidx}"
+    api 'com.github.ctiao:ndkbitmap-armv7a:0.9.24'
+    api 'com.github.ctiao:ndkbitmap-x86:0.9.24' // Optional
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    implementation "androidx.appcompat:appcompat:1.3.0"
 }
 
 repositories {
